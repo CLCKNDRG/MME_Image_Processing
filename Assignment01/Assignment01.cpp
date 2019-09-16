@@ -147,7 +147,20 @@ void Bilinear_Interpolation(BYTE* MemIn, BYTE* MemOut, int size_factor)
 	{
 		for (int j = 0; j < width*size_factor; j++)
 		{
-			MemOut[i * j] = MemIn[(i / size_factor) * (j / size_factor)];
+			int a = (int)(j / size_factor);
+			int b = (int)(i / size_factor);
+
+			double x1 = (double)j / (double)size_factor - (double)a;
+			double x2 = 1 - x1;
+			double y1 = (double)i / (double)size_factor - (double)b;
+			double y2 = 1 - y1;
+
+			double sq1 = x2 * y2;
+			double sq2 = x1 * y2;
+			double sq3 = x2 * y1;
+			double sq4 = x1 * y1;
+
+			MemOut[i * j] = sq1 * MemIn[a, b] + sq2 * MemIn[a+1, b] + sq3 * MemIn[a, b+1] + sq4 * MemIn[a+1, b+1];
 		}
 	}
 }
